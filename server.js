@@ -22,8 +22,8 @@ app.use(cookieParser());
 
 const connectDB = require("./server/config/db");
 
-// Global DB Connection Middleware for Serverless
-app.use(async (req, res, next) => {
+// DB Connection Middleware for API routes only
+app.use("/api", async (req, res, next) => {
   try {
     await connectDB();
     next();
