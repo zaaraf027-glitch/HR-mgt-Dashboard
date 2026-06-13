@@ -1,12 +1,12 @@
-# 🛸 Project Antigravity
+# 🧑‍💼 Nexus HR — Enterprise HR Management Suite
 
-> **Nexus HR** — A production-grade, full-stack Enterprise HR Management Suite with an experimental **Antigravity Mode** that dynamically alters UI physics, persists toggle state in MongoDB, and proves end-to-end architectural integrity across Frontend, Backend, and Database layers — without breaking a single pixel.
+> A production-grade, full-stack **Human Resources Management Dashboard** built with Node.js, Express, MongoDB, and Vanilla JS. Manage your entire workforce — employee records, departments, roles, admin profiles, and system preferences — all secured behind a real JWT-based authentication system with persistent database state.
 
 ---
 
 ## 🚀 Features
 
-### Core HR Suite
+### 👥 Employee Management (CRUD)
 - **Full Employee CRUD** — Add, edit, and delete employee records with live table updates and custom confirmation modals
 - **Live Dashboard Metrics** — Real-time stat cards showing total headcount, department distribution, new hires, and workforce activity feed
 - **Advanced Filtering & Pagination** — Search by name/ID, filter by department, and paginate large datasets with smart controls
@@ -20,35 +20,35 @@
 - **Remember Me** — 8-hour JWT expiry with localStorage/sessionStorage hybrid session caching
 
 ### ⚙️ Suite Settings
-- **Admin Profile Editor** — Update name, email persisted to MongoDB, with live DOM header sync (no page reload)
+- **Admin Profile Editor** — Update name and email, persisted to MongoDB, with live DOM header sync (no page reload)
 - **Change Password** — Bcrypt re-verification, new hash saved, fresh JWT cookie issued seamlessly
 - **Dynamic Tag/Chip UI** — Add or remove allowed Departments and Roles with interactive chips that feed `window.nexusConfig` globally
 - **`window.nexusConfig`** — Global state ensures employee form dropdowns stay in sync with admin-defined permission lists
 
-### 🌌 Antigravity Mode *(Experimental)*
-- **Full-Stack toggle** — Single button call hits `POST /api/preferences/toggle-antigravity`, persists state in MongoDB
-- **Optimistic UI update** — Layout flips instantly on click; rolls back gracefully on API failure
-- **Physics simulation** — Floating cards, rotating stat widgets, drifting sidebar, pulsing topbar — all via pure CSS transitions
+### 🎛️ User Preferences
+- **Full-stack preference toggle** — Single button call hits `POST /api/preferences/toggle-ui-mode`, persists state in MongoDB
+- **Optimistic UI update** — Layout updates instantly on click; rolls back gracefully on API failure
+- **Dynamic theming** — Smooth CSS transitions adapt the dashboard appearance based on saved preferences
 - **Layout integrity preserved** — Flexbox/Grid constraints keep all content readable, interactive, and within viewport bounds
-- **Persisted across sessions** — State rehydrated from DB on every `GET /api/auth/me` call
+- **Persisted across sessions** — Preference state rehydrated from DB on every `GET /api/auth/me` call
 
 ---
 
 ## 📸 Screenshots & Demos
 
-### Normal Mode vs. Antigravity Mode
+### Dashboard & Settings
 
-| Normal Mode | Antigravity Mode |
+| Dashboard View | Suite Settings |
 |:-----------:|:----------------:|
-| ![Normal Mode — Nexus HR Dashboard showing standard card layout](assets/screenshots/normal-mode.png) | ![Antigravity Mode — Cards floating with rotation and drift animations](assets/screenshots/antigravity-mode.png) |
-| Standard card grid, fixed sidebar, static topbar | Floating stat cards, drifting sidebar, pulsing header glow |
+| ![Nexus HR Dashboard showing employee stat cards and table](assets/screenshots/dashboard.png) | ![Settings panel with admin profile editor and department/role tags](assets/screenshots/settings-panel.png) |
+| Live stat cards, employee table, department filters | Admin profile editor, password change, preferences card |
 
-### Settings & Authentication
+### Authentication
 
-| Login / Sign Up | Suite Settings |
+| Login Page | Sign Up Page |
 |:-----------:|:----------------:|
-| ![Login page with Sign In / Sign Up toggle](assets/screenshots/login-page.png) | ![Settings panel with profile editor, password change, and Antigravity toggle](assets/screenshots/settings-panel.png) |
-| Dynamic form toggling between Sign In and Sign Up modes | Admin profile, allowed tags, and Experimental Preferences card |
+| ![Login page with email and password fields](assets/screenshots/login-page.png) | ![Sign Up page for creating a new admin account](assets/screenshots/signup-page.png) |
+| Secure JWT login with Remember Me option | New admin registration stored directly in MongoDB |
 
 ---
 
@@ -82,17 +82,17 @@
 
   [Browser / Client]
        │
-       │  User clicks "Toggle Antigravity" button
+       │  User updates a preference or submits a settings form
        │
        ▼
   ┌──────────────────────────────────┐
-  │     OPTIMISTIC UI UPDATE         │  ← Body class toggled instantly
+  │     OPTIMISTIC UI UPDATE         │  ← DOM updated instantly
   │  document.body.classList.add(    │     No wait for network round-trip
-  │    'antigravity-active'          │
+  │    'ui-preference-active'        │
   │  )                               │
   └──────────────┬───────────────────┘
                  │
-                 │  POST /api/preferences/toggle-antigravity
+                 │  POST /api/preferences/toggle-ui-mode
                  │  Cookie: nexus_token (httpOnly JWT)
                  ▼
   ┌──────────────────────────────────┐
@@ -100,10 +100,10 @@
   │                                  │
   │  1. verifyToken middleware        │  ← 401 if cookie missing/invalid
   │  2. Admin.findById(req.adminId)   │
-  │  3. admin.antigravityEnabled =   │  ← Atomic boolean flip
-  │       !admin.antigravityEnabled  │
+  │  3. admin.uiModeEnabled =        │  ← Atomic boolean flip
+  │       !admin.uiModeEnabled       │
   │  4. await admin.save()           │
-  │  5. return { antigravityEnabled }│
+  │  5. return { uiModeEnabled }     │
   └──────────────┬───────────────────┘
                  │
                  │  Mongoose write to Atlas
@@ -112,10 +112,10 @@
   │        MONGODB ATLAS             │
   │                                  │
   │  admins collection               │
-  │  { antigravityEnabled: true }    │  ← Persisted, survives reboots
+  │  { uiModeEnabled: true }         │  ← Persisted, survives reboots
   └──────────────┬───────────────────┘
                  │
-                 │  200 OK { antigravityEnabled: true }
+                 │  200 OK { uiModeEnabled: true }
                  ▼
   ┌──────────────────────────────────┐
   │     COMMIT / ROLLBACK UI         │
@@ -126,8 +126,8 @@
   └──────────────────────────────────┘
 
   [On every page load — GET /api/auth/me]
-       Rehydrates antigravityEnabled from DB into window.nexusConfig
-       and applies body class automatically — state survives refreshes.
+       Rehydrates saved preferences from DB into window.nexusConfig
+       and applies UI state automatically — persists across refreshes.
 ```
 
 ### API Endpoints Reference
@@ -137,11 +137,11 @@
 | `POST` | `/api/auth/register` | ❌ | Create new admin account |
 | `POST` | `/api/auth/login` | ❌ | Authenticate and set JWT cookie |
 | `POST` | `/api/auth/logout` | ❌ | Clear JWT cookie |
-| `GET`  | `/api/auth/me` | ✅ | Get current session profile |
+| `GET`  | `/api/auth/me` | ✅ | Get current session + profile |
 | `PUT`  | `/api/admin/profile` | ✅ | Update name, email, departments, roles |
 | `PUT`  | `/api/admin/change-password` | ✅ | Re-hash password, reissue JWT |
 | `GET`  | `/api/preferences` | ✅ | Fetch current user preferences |
-| `POST` | `/api/preferences/toggle-antigravity` | ✅ | Toggle antigravity state in DB |
+| `POST` | `/api/preferences/toggle-ui-mode` | ✅ | Toggle UI preference state in DB |
 | `GET`  | `/api/employees` | ✅ | List all employees |
 | `POST` | `/api/employees` | ✅ | Add new employee |
 | `PUT`  | `/api/employees/:id` | ✅ | Update employee record |
@@ -234,7 +234,7 @@ You can change these credentials from the **Suite Settings** panel after logging
 
 ## 🧪 Testing the System
 
-### E2E Antigravity Feature Test
+### E2E Full-Stack Integration Test
 
 Follow these steps to verify the complete **Frontend → Backend → Database** integration:
 
@@ -245,14 +245,15 @@ npm run dev
 # Log in with admin@nexushr.com / Admin@123
 ```
 
-**Step 2 — Enable Antigravity Mode via UI**
-1. In the **topbar**, click the 🌌 cloud/gravity icon button
-2. Observe the **optimistic UI update** — card layout immediately transforms
-3. A success toast appears: *"Antigravity Mode enabled."*
+**Step 2 — Add a new employee via the Dashboard**
+1. Click **"Add Employee"** in the top-right of the employee table
+2. Fill in the form (name, department, role, status) and submit
+3. Observe the **optimistic UI update** — the new record appears in the table immediately
+4. A success toast confirms: *"Employee added successfully."*
 
 **Step 3 — Verify database persistence via Settings**
-1. Navigate to **Suite Settings** → scroll to **Experimental Preferences**
-2. The toggle button text should read **"Disable Antigravity"** (confirming persisted state)
+1. Navigate to **Suite Settings** → check the **Allowed Departments** and **Allowed Roles** tags
+2. Confirm that any changes made are reflected across the employee add/edit dropdowns — no page reload needed
 
 **Step 4 — Verify via API directly (Postman / curl)**
 ```bash
@@ -261,39 +262,40 @@ curl -c cookies.txt -X POST http://localhost:5000/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"admin@nexushr.com","password":"Admin@123"}'
 
-# Fetch current preference state
+# Fetch all employees
+curl -b cookies.txt http://localhost:5000/api/employees
+
+# Fetch current admin preferences
 curl -b cookies.txt http://localhost:5000/api/preferences
-
-# Toggle antigravity
-curl -b cookies.txt -c cookies.txt -X POST \
-  http://localhost:5000/api/preferences/toggle-antigravity
 ```
 
-**Expected response:**
+**Expected response (employees):**
 ```json
-{ "antigravityEnabled": true }
+[
+  { "_id": "...", "name": "Jane Doe", "department": "Engineering", "role": "Senior Dev", "status": "Active" }
+]
 ```
 
-**Step 5 — Verify state rehydration on page reload**
+**Step 5 — Verify session persistence on page reload**
 1. Hard-reload the page (`Ctrl+Shift+R`)
-2. After `GET /api/auth/me` resolves, the antigravity CSS class is re-applied automatically
-3. The layout remains in the same state as before the reload — **confirming DB persistence**
+2. After `GET /api/auth/me` resolves, the dashboard reloads your profile and preferences automatically
+3. You remain logged in and all employee data is intact — **confirming DB persistence**
 
 **Step 6 — Test rollback on network failure**
 1. In DevTools → Network tab → select **"Offline"** mode
-2. Click the toggle button
-3. Observe: layout updates instantly (optimistic), then **rolls back** after the request fails
-4. Error toast: *"Failed to sync preferences with server."*
+2. Try submitting a form update
+3. Observe: UI updates optimistically, then **rolls back** after the request fails
+4. Error toast: *"Failed to sync changes with server."*
 
 ---
 
 ### Running All API Routes Health Check
 
 ```bash
-# Check server is alive
+# Check server is alive and employees endpoint is reachable
 curl http://localhost:5000/api/employees
 
-# Expected: Array of employee objects
+# Expected: Array of employee objects (or empty array on fresh install)
 ```
 
 ---
@@ -305,25 +307,25 @@ HR-mgt-Dashboard/
 │
 ├── client/                       # Frontend (static files served by Express)
 │   ├── index.html                # Main dashboard SPA shell
-│   ├── login.html                # Authentication page
+│   ├── login.html                # Authentication page (login & sign up)
 │   ├── css/
-│   │   ├── style.css             # Dashboard design system + Antigravity CSS
+│   │   ├── style.css             # Dashboard design system & component styles
 │   │   └── login.css             # Login / Sign Up page styles
 │   └── js/
-│       ├── app.js                # Core dashboard logic, auth guard, settings, antigravity
+│       ├── app.js                # Core dashboard logic, auth guard, settings, preferences
 │       └── login.js              # Authentication form handler (login & register)
 │
 ├── server/
 │   ├── model/
-│   │   ├── admin.js              # Mongoose Admin schema (includes antigravityEnabled)
+│   │   ├── admin.js              # Mongoose Admin schema (profile, credentials, preferences)
 │   │   └── employee.js           # Mongoose Employee schema
 │   ├── middleware/
 │   │   └── auth.js               # verifyToken middleware (cookie + Bearer header)
 │   └── routes/
 │       ├── authRoutes.js         # /api/auth/* (login, register, logout, me, seeder)
-│       ├── adminRoutes.js        # /api/admin/* (profile, change-password)
+│       ├── adminRoutes.js        # /api/admin/* (profile update, change-password)
 │       ├── employeeRoutes.js     # /api/employees CRUD
-│       └── preferencesRoutes.js  # /api/preferences (get, toggle-antigravity)
+│       └── preferencesRoutes.js  # /api/preferences (get, toggle-ui-mode)
 │
 ├── server.js                     # Express app entry point
 ├── .env                          # Environment variables (not committed)
@@ -365,7 +367,7 @@ This project is licensed under the **MIT License**. See [LICENSE](LICENSE) for d
 
 <div align="center">
 
-**Built with ☕ and zero gravity by the Nexus HR Team**
+**Built with ☕ by the Nexus HR Team**
 
 [![GitHub](https://img.shields.io/badge/GitHub-zaaraf027--glitch-181717?style=flat&logo=github)](https://github.com/zaaraf027-glitch/HR-mgt-Dashboard)
 
