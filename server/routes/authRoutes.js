@@ -102,8 +102,20 @@ router.post("/register", async (req, res) => {
 
     return res.status(201).json(adminProfile);
   } catch (err) {
-    console.error("Registration failed:", err);
-    return res.status(500).json({ error: "Registration failed due to a server error." });
+    // 1. Log the EXACT error and stack trace to the Vercel Runtime Logs
+    console.error("🔥 [AUTH REGISTER ERROR]:", err.message);
+    console.error("Stack Trace:", err.stack);
+    
+    // 2. Handle specific MongoDB Duplicate Key Errors (e.g., email already exists)
+    if (err.code === 11000) {
+      return res.status(409).json({ error: "An account with this email already exists." });
+    }
+
+    // 3. Return a clean, sanitized error to the frontend
+    return res.status(500).json({ 
+      error: "Registration failed due to an internal server error.",
+      details: process.env.NODE_ENV === "development" ? err.message : undefined
+    });
   }
 });
 
