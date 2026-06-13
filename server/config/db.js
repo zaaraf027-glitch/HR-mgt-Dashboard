@@ -34,14 +34,15 @@ async function connectDB() {
   }
 
   if (!cached.promise) {
-    const uri = process.env.MONGO_URI;
+    const uri = process.env.MONGODB_URI || process.env.DATABASE_URL;
     if (!uri) {
-      console.error("❌ MONGO_URI is not defined in your .env file.");
-      return null;
+      console.error("❌ Database connection error: Neither MONGODB_URI nor DATABASE_URL environment variable is defined.");
+      throw new Error("Database connection configuration missing.");
     }
 
-    console.log("🔌 Initializing new MongoDB connection...");
+    console.log("🔌 Initializing new MongoDB connection (Singleton)...");
     cached.promise = mongoose.connect(uri, {
+      bufferCommands: false, // Prevent queries from hanging indefinitely on network issues
       serverSelectionTimeoutMS: 5000, // Fail fast in serverless
       socketTimeoutMS: 45000,
       maxPoolSize: 10 // Limit connections for serverless

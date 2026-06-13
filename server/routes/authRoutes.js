@@ -101,20 +101,19 @@ router.post("/register", async (req, res) => {
     delete adminProfile.passwordHash;
 
     return res.status(201).json(adminProfile);
-  } catch (err) {
-    // 1. Log the EXACT error and stack trace to the Vercel Runtime Logs
-    console.error("🔥 [AUTH REGISTER ERROR]:", err.message);
-    console.error("Stack Trace:", err.stack);
+  } catch (error) {
+    // Explicitly log the detailed internal database error to the server console
+    console.error("Database Connection Error Details:", error);
     
-    // 2. Handle specific MongoDB Duplicate Key Errors (e.g., email already exists)
-    if (err.code === 11000) {
+    // Handle specific MongoDB Duplicate Key Errors (e.g., email already exists) to avoid breaking app features
+    if (error.code === 11000) {
       return res.status(409).json({ error: "An account with this email already exists." });
     }
 
-    // 3. Return a clean, sanitized error to the frontend
     return res.status(500).json({ 
-      error: "Registration failed due to an internal server error.",
-      details: process.env.NODE_ENV === "development" ? err.message : undefined
+      success: false, 
+      message: "Database connection failed. Please try again later.",
+      error: "Database connection failed. Please try again later."
     });
   }
 });
@@ -156,8 +155,14 @@ router.post("/login", async (req, res) => {
     delete adminProfile.passwordHash;
 
     return res.json(adminProfile);
-  } catch (err) {
-    return res.status(500).json({ error: "Login failed due to a server error." });
+  } catch (error) {
+    // Explicitly log the detailed internal database error to the server console
+    console.error("Database Connection Error Details:", error);
+    return res.status(500).json({ 
+      success: false, 
+      message: "Database connection failed. Please try again later.",
+      error: "Database connection failed. Please try again later."
+    });
   }
 });
 
