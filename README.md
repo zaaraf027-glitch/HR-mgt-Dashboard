@@ -36,34 +36,41 @@
 
 ## 📸 Screenshots & Demos
 
-> 📂 All screenshots live in [`assets/screenshots/`](assets/screenshots/). Drop your images there and they will render automatically below.
-
----
-
-### 🏠 Dashboard & Settings
-
-| Dashboard View | Suite Settings |
-|:-----------:|:----------------:|
-| ![Nexus HR Dashboard showing employee stat cards and table](assets/screenshots/dashboard.png) | ![Settings panel with admin profile editor and department/role tags](assets/screenshots/settings-panel.png) |
-| Live stat cards, employee table, department filters | Admin profile editor, password change, preferences card |
-
----
-
-### 👥 Employee Management
-
-| Employee List | Add Employee |
-|:-----------:|:----------------:|
-| ![Full employee records table with search, filter, and pagination controls](assets/screenshots/employee-list.png) | ![Add Employee modal form with fields for name, department, role, and status](assets/screenshots/add-employee.png) |
-| Full employee table with search, filter by department, and pagination | Add Employee form with dynamic department & role dropdowns |
-
 ---
 
 ### 🔐 Authentication
 
 | Login Page | Sign Up Page |
 |:-----------:|:----------------:|
-| ![Login page with email and password fields](assets/screenshots/login-page.png) | ![Sign Up page for creating a new admin account](assets/screenshots/signup-page.png) |
-| Secure JWT login with Remember Me option | New admin registration stored directly in MongoDB |
+| ![Nexus HR Login page with email, password and SSO options](assets/screenshots/Screenshot%202026-06-14%20020453.png) | ![Nexus HR Sign Up page with Full Name, Email and Password fields](assets/screenshots/Screenshot%202026-06-14%20020506.png) |
+| Secure JWT login with Remember Me & SSO options | New admin account stored directly in MongoDB |
+
+---
+
+### 🏠 Dashboard
+
+| Organization Overview |
+|:-----------:|
+| ![Nexus HR Dashboard with stat cards, recent activity feed and staffing health panel](assets/screenshots/Screenshot%202026-06-14%20020614.png) |
+| Live stat cards — Total Employees, Departments, New Joinees, Active Employees — with activity feed and upcoming reviews |
+
+---
+
+### 👥 Employee Management
+
+| Employee Directory | Add New Employee |
+|:-----------:|:----------------:|
+| ![Employee Directory table with search, department filter and paginated records](assets/screenshots/Screenshot%202026-06-14%20020628.png) | ![Add New Employee form with Full Name, Department, Role, Salary, Join Date and Work Mode fields](assets/screenshots/Screenshot%202026-06-14%20020658.png) |
+| Full directory with search by name/ID, department filter, edit & delete actions | Add employee form with dynamic dropdowns for Department and Role |
+
+---
+
+### ⚙️ Suite Settings
+
+| Settings Panel |
+|:-----------:|
+| ![Suite Settings showing Admin Profile editor, Change Password form, Application Defaults tag chips and Experimental Preferences](assets/screenshots/Screenshot%202026-06-14%20020947.png) |
+| Admin profile editor, password change, allowed departments & roles tag chips, and user preferences |
 
 ---
 
