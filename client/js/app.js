@@ -63,7 +63,7 @@ async function verifySession() {
 
 
 // ─── Config ────────────────────────────────────────────────────────────────
-const API_URL = 'http://localhost:5000/api/employees';
+const API_URL = 'https://hr-mgt-dashboard.vercel.app/api/employees';
 
 // ─── State ─────────────────────────────────────────────────────────────────
 let editMode      = false;
