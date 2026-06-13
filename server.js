@@ -117,8 +117,15 @@ mongoose.connection.on("disconnected", () => {
 // ── Start Server ─────────────────────────────────────────────────────
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, async () => {
-  console.log(`🚀  Server running on http://localhost:${PORT}`);
-  await connectDB();
-});
+// Connect to DB independently of app.listen so it works on Vercel serverless
+connectDB();
 
+// Only listen locally. Vercel handles the listener automatically in production.
+if (process.env.NODE_ENV !== "production") {
+  app.listen(PORT, () => {
+    console.log(`🚀  Server running on http://localhost:${PORT}`);
+  });
+}
+
+// Export the app for Vercel serverless functions
+module.exports = app;
