@@ -10,7 +10,13 @@ dotenv.config();
 const app = express();
 
 // ── Middleware ──────────────────────────────────────────────────────
-app.use(cors());
+app.use(cors({
+  origin: process.env.NODE_ENV === "production"
+    ? process.env.CLIENT_ORIGIN || true   // Vercel sets the domain automatically
+    : "http://localhost:5000",
+  credentials: true                        // Required for httpOnly JWT cookies
+}));
+
 app.use(express.json());
 app.use(cookieParser());
 
