@@ -36,14 +36,29 @@
 
 ## 📸 Screenshots & Demos
 
-### Dashboard & Settings
+> 📂 All screenshots live in [`assets/screenshots/`](assets/screenshots/). Drop your images there and they will render automatically below.
+
+---
+
+### 🏠 Dashboard & Settings
 
 | Dashboard View | Suite Settings |
 |:-----------:|:----------------:|
 | ![Nexus HR Dashboard showing employee stat cards and table](assets/screenshots/dashboard.png) | ![Settings panel with admin profile editor and department/role tags](assets/screenshots/settings-panel.png) |
 | Live stat cards, employee table, department filters | Admin profile editor, password change, preferences card |
 
-### Authentication
+---
+
+### 👥 Employee Management
+
+| Employee List | Add Employee |
+|:-----------:|:----------------:|
+| ![Full employee records table with search, filter, and pagination controls](assets/screenshots/employee-list.png) | ![Add Employee modal form with fields for name, department, role, and status](assets/screenshots/add-employee.png) |
+| Full employee table with search, filter by department, and pagination | Add Employee form with dynamic department & role dropdowns |
+
+---
+
+### 🔐 Authentication
 
 | Login Page | Sign Up Page |
 |:-----------:|:----------------:|
