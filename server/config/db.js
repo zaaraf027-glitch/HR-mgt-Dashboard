@@ -34,7 +34,7 @@ async function connectDB() {
   }
 
   if (!cached.promise) {
-    const uri = process.env.MONGODB_URI || process.env.DATABASE_URL;
+    const uri = process.env.MONGODB_URI || process.env.DATABASE_URL || process.env.MONGO_URI;
     if (!uri) {
       console.error("❌ Database connection error: Neither MONGODB_URI nor DATABASE_URL environment variable is defined.");
       throw new Error("Database connection configuration missing.");
